@@ -10,4 +10,4 @@
  * Sudoku
 
 Simple Single Page Web Application built with Vue js, Bootstrap and jQuery and hosted on a simple AWS S3 Bucket.
-Play now on: [http://olamillygamesapp.s3-website-us-east-1.amazonaws.com]
+Play now on: http://olamillygamesapp.s3-website-us-east-1.amazonaws.com
