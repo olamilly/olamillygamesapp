@@ -2,6 +2,7 @@
 <div class="abody">
     <div class="main">
         <div class="gameBox">
+            <p>Time: {{ timeLeft }}</p>
             <div class="scoreBox">
                 <h5>Words: {{ number_of_words }}</h5>
                 <h2>Score: {{ score }}</h2>
@@ -27,7 +28,7 @@
                         </svg>
                     </p>
                 </div>
-                <button disabled @click="checkWord" id="enter">Enter</button>
+                <button :disabled="currentWord.length<3" @click="checkWord" id="enter">Enter</button>
             </div>
         </div>
         <!-- Button trigger modal -->
@@ -35,30 +36,26 @@
         Launch demo modal
         </button>
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" @click="($event)=>{e.preventDefault()}">
+        <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content" style="text-align: center;">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel" style="text-align: center; width: 100%;">HOW TO PLAY</h5>
+                        <h5 class="modal-title" id="exampleModalLabel" style="text-align: center; width: 100%;" v-if="modalState==1" >HOW TO PLAY</h5>
+                        <h5 class="modal-title" id="exampleModalLabel" style="text-align: center; width: 100%;" v-if="modalState==2" >TIME UP!</h5>
                     </div>
                     <div class="modal-body" >
-                        <p id="description"> Combine letters to make words. Make as many as you can in 60 seconds. </p>
+                        <p id="description" v-if="modalState==1" > Combine letters to make words. Make as many words as you can in 60 seconds. </p>
+                        <div v-if="modalState==2">
+                            <p>Score:</p>
+                            <h2>{{ score }}</h2>
+                            <div style="display:flex;justify-content: space-evenly;"><p style="font-size: 1rem;font-weight: 700;">WORD</p><p style="font-size: 1rem;font-weight: 700;">SCORE</p></div>
+                            <div v-for="w in userWords" style="display:flex;justify-content: space-evenly;"><p>{{ w.toUpperCase() }}</p><p>{{ w.length*100 }}</p></div>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <!--<button type="button" style="color: white;" id=clz class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
-                        <button type="button" id=start  class="btn btn-primary" data-bs-dismiss="modal" style="color:white; display: none;">Start</button>
-                        <div id="loader">
-                            <svg class="inactive" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 50 50" stroke="#007bff">
-                                <g fill="none" fill-rule="evenodd">
-                                    <g transform="translate(1 1)" stroke-width="2">
-                                        <circle stroke-opacity=".5" cx="18" cy="18" r="18"/>
-                                        <path d="M36 18c0-9.94-8.06-18-18-18">
-                                            <animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/>
-                                        </path>
-                                    </g>
-                                </g>
-                            </svg>
-                        </div>
+                        <RouterLink to="/"><button type="button" v-if="modalState==2" style="color: white;" id=clz class="btn btn-secondary" data-bs-dismiss="modal" >Home</button></RouterLink>
+                        <button type="button" v-if="modalState==2" id=restart  class="btn btn-primary" style="color:white;" data-bs-dismiss="modal" @click="reinitGame" >Restart</button>
+                        <button type="button" v-if="modalState==1" id=start  class="btn btn-primary" data-bs-dismiss="modal" style="color:white;" @click="startTimer" >Start</button>
                     </div>
                 </div>
             </div>
@@ -68,7 +65,8 @@
 </template>
 
 <script >
- 
+import { findPartialAnagrams } from 'find-partial-anagrams';
+
 export default {
   data() {
     return {
@@ -76,10 +74,63 @@ export default {
         score:0,
         myWord:"",
         allWords:[],
-        currentWord:""
+        currentWord:"",
+        userWords:[],
+        timeLeft:5,
+        modalState:1
     }
   },
   methods: {
+    mainInit(){
+        this.getRandomWord()
+        .then((word) => {
+            var a = word.toUpperCase()
+            const letters = a.split("");
+
+            // Use the Fisher-Yates shuffle algorithm to randomize the order
+            for (let i = letters.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [letters[i], letters[j]] = [letters[j], letters[i]];
+            }
+            // Join the scrambled letters back into a string
+            this.myWord=letters.join("");
+            
+            this.getAllWords()
+        })
+        .catch((error) =>{
+            console.log(error)
+            alert("Network Error")})
+    },
+    reinitGame(){
+        this.number_of_words=0
+        this.score=0
+        this.myWord=""
+        this.allWords=[]
+        this.currentWord=""
+        this.userWords=[]
+        this.timeLeft=10
+        this.modalState=1
+        document.querySelectorAll(".letters>p").forEach(i=>{
+            if(i.classList.contains("clicked")){
+                i.classList.remove("clicked")
+            }
+        })
+        document.querySelectorAll(".boxes>p").forEach(i=>{
+            i.innerText=""
+        })
+        this.mainInit()
+        this.startTimer()
+    },
+    startTimer(){
+        var m = setInterval( ()=>{
+            this.timeLeft = this.timeLeft - 1
+            if(this.timeLeft==0){
+                clearInterval(m);
+                this.modalState=2
+                document.getElementById("mBn").click();
+            }
+        }, 1000);
+    },
     async getRandomWord() {
         const response = await fetch(`https://api.datamuse.com/words?sp=??????`);
         const data = await response.json();
@@ -93,22 +144,34 @@ export default {
         }
     },
     async getAllWords(){
-        const response = await fetch(`https://httpip.es/api/words?letters=${this.myWord[0]},${this.myWord[1]},${this.myWord[2]},${this.myWord[3]},${this.myWord[4]},${this.myWord[5]}`);
-        const data = await response.json(); 
-        if (data.data.length > 0) {
-            data.data.forEach(i=>{
-                if(i.length>=3){
-                    this.allWords.push(i)
-                }
-            })
+        const dictionary = [];
+
+        async function loadDictionary() {
+            const response = await fetch('words.txt'); // Fetch the text file
+            const text = await response.text(); // Read the file content as text
+            const lines = text.split('\n'); // Split the text into lines (words)
+
+            for (const line of lines) {
+            dictionary.push(line.trim()); // Add each word (trimmed) to the dictionary
+            }
         }
-        else{
-            throw new Error("Unable to get word.");
-        }
+        await loadDictionary();
+        const partialAnagrams = findPartialAnagrams(this.myWord, dictionary);
+        partialAnagrams.forEach(i=>{
+            if(i.length>=3){
+                this.allWords.push(i)
+            }
+        })
+        
     },
     type(e){
         if (e.target.id=="delete"||e.target.id=="Layer_1"){
             if(this.currentWord.length>0){
+                document.querySelectorAll(".letters>p").forEach(i=>{
+                    if(i.innerText==document.getElementById(String(this.currentWord.length)).innerText){
+                        i.classList.remove("clicked")
+                    }
+                })
                 document.getElementById(String(this.currentWord.length)).innerText=""
                 this.currentWord = this.currentWord.slice(0, -1); 
             }
@@ -118,23 +181,33 @@ export default {
                 this.currentWord+=e.target.innerText
                 e.target.classList.add("clicked")
                 document.getElementById(String(this.currentWord.length)).innerText=e.target.innerText
-                if(this.currentWord.length>=3){
-                    document.getElementById("enter").disabled=false
-                }
             }
         }
         
     },
     checkWord(){
-        if(this.allWords.includes(this.currentWord.toLowerCase())){
+        if(this.allWords.includes(this.currentWord.toLowerCase()) && !this.userWords.includes(this.currentWord.toLowerCase())){
             this.number_of_words++
             this.score+=(this.currentWord.length * 100)
+            this.userWords.push(this.currentWord.toLowerCase())
+            var index = this.allWords.indexOf(this.currentWord.toLowerCase());
+            if (index > -1) {
+                this.allWords.splice(index, 1);
+            }
         }
         else{
-            document.getElementById("invalid").style.display="block"
-            setTimeout(() => {
-                document.getElementById("invalid").style.display="none"
-            }, 2500);
+            if(this.userWords.includes(this.currentWord.toLowerCase())){
+                document.getElementById("used").style.display="block"
+                setTimeout(() => {
+                    document.getElementById("used").style.display="none"
+                }, 2500);
+            }
+            else{
+                document.getElementById("invalid").style.display="block"
+                setTimeout(() => {
+                    document.getElementById("invalid").style.display="none"
+                }, 2500);   
+            }
         }
         this.currentWord=""
         document.querySelectorAll(".boxes>p").forEach(i=>{
@@ -150,27 +223,7 @@ export default {
   },
   mounted(){
     document.getElementById("mBn").click();
-    this.getRandomWord()
-    .then((word) => {
-        var a = word.toUpperCase()
-        const letters = a.split("");
-
-        // Use the Fisher-Yates shuffle algorithm to randomize the order
-        for (let i = letters.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [letters[i], letters[j]] = [letters[j], letters[i]];
-        }
-        // Join the scrambled letters back into a string
-        this.myWord=letters.join("");
-
-        this.getAllWords().then(()=>{
-            document.getElementById("loader").style.display="none"
-            document.getElementById("start").style.display="block"
-        })
-    })
-    .catch((error) =>{
-        console.log(error)
-        alert("Network Error")})
+    this.mainInit()
   }, 
   beforeUnmount(){
     console.log("unmount")
@@ -179,9 +232,6 @@ export default {
 </script>
 
 <style scoped>
-#loader{
-margin:0px;
-}
 .abody{
 text-align: center;
 margin-top: 0px;

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@blex41/word-search": "^1.2.0",
+    "find-partial-anagrams": "^0.2.0",
     "sudoku-gen": "^1.0.2",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
