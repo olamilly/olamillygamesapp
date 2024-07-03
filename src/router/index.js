@@ -13,6 +13,9 @@ const router = createRouter({
       path: '/anagrams',
       name: 'anagrams',
       component: () => import('../views/AnagramsView.vue'),
+      meta: {
+        padding: '0px',
+      },
     },
     {
       path: '/wordle',

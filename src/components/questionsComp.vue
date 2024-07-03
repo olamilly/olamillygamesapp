@@ -10,7 +10,7 @@
         <p style="color:rgb(255, 122, 122)" v-if="answerState==1 || answerState==4">Incorrect</p>
         <p style="color:rgb(134, 247, 134)" v-if="answerState==2 || answerState==3">Correct</p>
         
-        <button id="next" @click="restartTheGame" v-if="answerState==3 || answerState==4" >Play Again</button>
+        <button id="next" class="large" @click="restartTheGame" v-if="answerState==3 || answerState==4" >Play Again</button>
       </div>
       
     </div>
@@ -58,7 +58,9 @@
         }
         if(this.answerState==3 || this.answerState==4){
           this.score=(this.score/5)*100
-          this.$emit('score', this.score)
+          setTimeout(()=>{
+            this.$emit('score', this.score)
+          },700)
         }
         if(this.question!=this.finalQuestions.length-1){
           this.nextQuestion()
@@ -82,6 +84,17 @@
   <style scoped>
   h3{
     color:white;
+  }
+  .large{
+    outline: none;
+    border: 3px solid yellow;
+    background-color: rgb(179, 185, 18);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    color:black;
+    padding:.7rem;
   }
   .containery {
     width: 600px;

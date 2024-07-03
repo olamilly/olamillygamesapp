@@ -14,7 +14,8 @@
         <a  class="closebtn"  @click="closeNav()">&times;</a>
         <div class="overlay-content1">
             <div style="margin-bottom:1.5rem">
-              <h1 style="font-size: 3.5rem;">Well Done 🎉</h1>
+              <h1 style="font-size: 3.5rem;" v-if="score>0">Well Done 🎉</h1>
+              <h1 style="font-size: 3.5rem;" v-else >😔</h1>
               <p style="font-size: 1.5rem;">Score:</p>
               <h1 style="font-size: 6rem; font-weight: bold; margin-top:1.5rem"><span> {{ score }}%</span></h1>
               <p>Better than <span style="color: #F5DFB8;">{{ Math.round((Math.random() * (90 - 100) + 100) * 100) / 100}}%</span> of previous quiz takers!</p>
@@ -22,7 +23,7 @@
             
             <div style="display: flex;flex-direction: column;justify-content: center;align-items: center;">
                 <button @touchstart="restartGame()" @click="restartGame()" class="large"> PLAY AGAIN </button>
-                <!--backhome? small button-->
+                <RouterLink to="/"><button class="small">Home</button></RouterLink>
             </div>
         </div>
       </div>
@@ -211,5 +212,15 @@
     color:black;
     padding:.7rem;
   }
- 
+ .small{
+  outline: none;
+    border: 3px solid yellow;
+    background-color: rgb(179, 185, 18);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    color:black;
+    padding:.3rem;
+ }
   </style>

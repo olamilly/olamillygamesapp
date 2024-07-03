@@ -1,22 +1,24 @@
 <template>
 <div class="abody">
+    <RouterLink to="/" style="align-self: flex-start;margin-top: .5rem;margin-left: .5rem;"><box-icon name='arrow-back' style="align-self: flex-start; height:2.5rem; width:2rem;"></box-icon></RouterLink>
     <div class="main">
+        <div class="header" style="display:flex"> <h1  style="font-size: 2.7rem;">ANA</h1><h1 class="usd" style="font-size: 2.7rem;">G</h1><h1 class="bw" style="font-size: 2.7rem;">R</h1><h1 style="font-size: 2.7rem;">AMS</h1></div>
         <div class="gameBox">
-            <p>Time: {{ timeLeft }}</p>
+            <p id="timer">00:{{ timeLeft }}</p>
             <div class="scoreBox">
                 <h5>Words: {{ number_of_words }}</h5>
                 <h2>Score: {{ score }}</h2>
             </div>
-            <p style="color:red;margin:.2rem;display:none" id="invalid">Invalid Word</p>
-            <p style="color:red;margin:.2rem;display:none" id="used">Word Already Used</p>
             <div class="keyboard">
+                <p style="color:red;margin:.2rem;display:none" id="invalid">Invalid Word</p>
+                <p style="color:red;margin:.2rem;display:none" id="used">Word Already Used</p>
                 <div class="boxes">
                     <p v-for="index in 6" :id="index" :key="index"></p>
                 </div>
                 <div class="letters">
                     <p v-for="(character, index) in myWord" :key="index" :id="index" @click="type($event)">{{ character }}</p>
-                    <p id="delete" @click="type($event)">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="20px" width="20px" version="1.1" id="Layer_1" viewBox="0 0 512 512" xml:space="preserve">
+                    <p id="delete" @click="type($event)" >
+                        <svg style="margin-bottom: .35rem;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="20px" width="20px" version="1.1" id="Layer_1" viewBox="0 0 512 512" xml:space="preserve">
                             <g>
                                 <g>
                                     <g>
@@ -33,7 +35,7 @@
         </div>
         <!-- Button trigger modal -->
         <button type="button" id="mBn"class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="display: none;"  >
-        Launch demo modal
+        Launch modal
         </button>
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -42,19 +44,24 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel" style="text-align: center; width: 100%;" v-if="modalState==1" >HOW TO PLAY</h5>
                         <h5 class="modal-title" id="exampleModalLabel" style="text-align: center; width: 100%;" v-if="modalState==2" >TIME UP!</h5>
+                        <h5 class="modal-title" id="exampleModalLabel" style="text-align: center; width: 100%;" v-if="modalState==3" >ALL WORDS</h5>
                     </div>
                     <div class="modal-body" >
                         <p id="description" v-if="modalState==1" > Combine letters to make words. Make as many words as you can in 60 seconds. </p>
+                        <p id="description" v-if="modalState==1" > Hint: Using a keyboard can help you type faster. Goodluck😉</p>
                         <div v-if="modalState==2">
-                            <p>Score:</p>
-                            <h2>{{ score }}</h2>
-                            <div style="display:flex;justify-content: space-evenly;"><p style="font-size: 1rem;font-weight: 700;">WORD</p><p style="font-size: 1rem;font-weight: 700;">SCORE</p></div>
-                            <div v-for="w in userWords" style="display:flex;justify-content: space-evenly;"><p>{{ w.toUpperCase() }}</p><p>{{ w.length*100 }}</p></div>
+                            <p style="margin-bottom:.2rem;">Score:</p>
+                            <h2 style="font-size:2rem;">{{ score }}</h2>
+                            <p v-if="userWords.length==0">😔</p>
+                            <div style="display:flex;justify-content: space-evenly;" class="userWordHeading" v-if="userWords.length>0"><p style="font-size: 1rem;font-weight: 700;" >WORD</p><p style="font-size: 1rem;font-weight: 700;">SCORE</p></div>
+                            <div v-for="w in userWords" class="userWords" style="display:flex;justify-content: space-evenly;" v-if="userWords.length>0"><p style="font-size:.8rem">{{ w.toUpperCase() }}</p><p style="font-size:.8rem">{{ w.length*100 }}</p></div>
                         </div>
+                        <div v-if="modalState==3" style="display:flex; flex-wrap: wrap;justify-content: center;"><p v-for="x in userWords" style="margin:.2rem;font-weight:700">{{ x }}, </p><p v-for="w in allWords" style="margin:.2rem">{{ w }}, </p></div>
                     </div>
                     <div class="modal-footer">
-                        <RouterLink to="/"><button type="button" v-if="modalState==2" style="color: white;" id=clz class="btn btn-secondary" data-bs-dismiss="modal" >Home</button></RouterLink>
-                        <button type="button" v-if="modalState==2" id=restart  class="btn btn-primary" style="color:white;" data-bs-dismiss="modal" @click="reinitGame" >Restart</button>
+                        <RouterLink to="/"><button type="button" style="color: white;" id=clz class="btn btn-secondary" data-bs-dismiss="modal" >Home</button></RouterLink>
+                        <button type="button" v-if="modalState==2"  class="btn btn-primary" style="color:white;" @click="()=>{modalState=3}" >All words</button>
+                        <button type="button" v-if="modalState==2 || modalState==3" id=restart  class="btn btn-primary" style="color:white;" data-bs-dismiss="modal" @click="reinitGame" >Restart</button>
                         <button type="button" v-if="modalState==1" id=start  class="btn btn-primary" data-bs-dismiss="modal" style="color:white;" @click="startTimer" >Start</button>
                     </div>
                 </div>
@@ -76,11 +83,27 @@ export default {
         allWords:[],
         currentWord:"",
         userWords:[],
-        timeLeft:5,
+        timeLeft:60,
         modalState:1
     }
   },
   methods: {
+    keyboardInput(e){
+        if(this.currentWord.length<6 && this.myWord.includes(e.key.toUpperCase())){
+            for (var i of  document.querySelectorAll(".letters>p")){
+                if(i.innerText==e.key.toUpperCase() && !i.classList.contains("clicked")){
+                    i.click()
+                    break;
+                }
+            }
+        }
+        if(e.key=="Enter"){
+            document.getElementById("enter").click()
+        }
+        if(e.key=="Backspace"){
+            document.getElementById("delete").click()
+        }
+    },
     mainInit(){
         this.getRandomWord()
         .then((word) => {
@@ -102,13 +125,15 @@ export default {
             alert("Network Error")})
     },
     reinitGame(){
+        document.getElementById("timer").style.transition= "color 60s linear";
+        document.getElementById("timer").style.color="red"
         this.number_of_words=0
         this.score=0
         this.myWord=""
         this.allWords=[]
         this.currentWord=""
         this.userWords=[]
-        this.timeLeft=10
+        this.timeLeft=60
         this.modalState=1
         document.querySelectorAll(".letters>p").forEach(i=>{
             if(i.classList.contains("clicked")){
@@ -122,11 +147,20 @@ export default {
         this.startTimer()
     },
     startTimer(){
-        var m = setInterval( ()=>{
-            this.timeLeft = this.timeLeft - 1
+        function formatNumber(number, digits) {
+        const zeroPadding = Array(Math.max(0, digits - String(number).length)).fill('0').join('');
+        return zeroPadding + number;
+        }
+
+        document.getElementById("timer").style.color="red"
+        window.m = setInterval( ()=>{
+            this.timeLeft = formatNumber(this.timeLeft - 1, 2)
             if(this.timeLeft==0){
-                clearInterval(m);
+                clearInterval(window.m);
                 this.modalState=2
+                document.getElementById("timer").style.transition= "none";
+                document.getElementById("timer").style.color="black"
+                document.removeEventListener("keydown",this.keyboardInput)
                 document.getElementById("mBn").click();
             }
         }, 1000);
@@ -222,11 +256,12 @@ export default {
     }
   },
   mounted(){
+    document.addEventListener("keydown",this.keyboardInput)
     document.getElementById("mBn").click();
     this.mainInit()
-  }, 
+  },
   beforeUnmount(){
-    console.log("unmount")
+    clearInterval(window.m);
   }
 }
 </script>
@@ -248,9 +283,6 @@ align-items: center;
 #description{
     margin-bottom: 0px;
 }
-@media screen and (max-width: 570px) {
-
-}
 *{
 font-family: 'Montserrat', sans-serif;
 box-sizing: border-box;
@@ -262,7 +294,24 @@ flex-direction:column;
 align-items: center;
 justify-content: center;
 width: 100%;
+height:100%;
 margin-top: 1rem;
+}
+.gameBox{
+    height:80%;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+#enter{
+    width:30%;
+    padding:.5rem;
+    outline:none;
+    border:2px solid black;
+    border-radius: .7rem;
+    box-shadow: 2px 2px dimgray;
+    margin-top:.2rem;
 }
 .letters,.boxes{
 display:flex;
@@ -275,8 +324,11 @@ display:flex;
     width:50px;
     cursor:pointer;
     font-size:1.6rem;
+    margin:.15rem;
+    box-shadow: 2px 2px dimgray;
 }
 .boxes>p{
+    box-shadow:inset 0px 0px 1px 1px dimgray;
     border:2px solid black;
     border-radius: .5rem;
     padding:.3rem;
@@ -284,6 +336,7 @@ display:flex;
     height:50px;
     width:50px;
     font-size:1.6rem;
+    margin:.15rem;
 }
 .keyboard{
     display:flex;
@@ -295,5 +348,29 @@ display:flex;
     pointer-events: none;
     cursor: not-allowed;
     color:gray;
+}
+.bw {
+    transform: scale(-1, 1);
+    color: #000080;
+    -moz-transform: scale(-1, 1);
+    -webkit-transform: scale(-1, 1);
+    -o-transform: scale(-1, 1);
+    -ms-transform: scale(-1, 1);
+}
+.usd {
+    transform: scale(1, -1);
+    color: #000080;
+    -moz-transform: scale(1, -1);
+    -webkit-transform: scale(1, -1);
+    -o-transform: scale(1, -1);
+    -ms-transform: scale(1, -1);
+    transform: scale(1, -1); 
+}
+#timer{
+    font-size:1.7rem;
+    transition: color 60s linear;
+}
+.userWordHeading>p, .userWords>p{
+margin-bottom: .15rem;
 }
 </style>

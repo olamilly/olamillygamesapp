@@ -23,6 +23,11 @@ else{
 }
 if(to.meta.overflow){
     document.body.style.overflow= "hidden"
+    let height = screen.availHeight;
+    console.log(to,height)
+    if (height<=800 && to.name=="wordsearch"){
+        document.body.style.overflow= "auto"
+    }
 }
 else{
     document.body.style.overflow="auto";

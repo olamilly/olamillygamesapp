@@ -125,6 +125,7 @@
   <div class="ticapp">
     <div class="tictacmain">
         <h1 style="font-size:3rem; font-weight:700;margin-bottom:1.5rem;"><span style="color: red;">X</span> & <span style="color:blue">O</span></h1>
+        <p>Pass and Play!</p>
         <div class="containery">
             <div class="row" id="topRow">
                 <p class="cell" id="00"></p>
