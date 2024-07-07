@@ -2,7 +2,7 @@
     <div class="containery">
       <div class="formy">
         <div class="form-boxy">
-            <label>Choose preferred difficulty level:</label>
+            <label>Choose difficulty level:</label>
             <select v-model="difficulty" class="difficulties">
                 <option selected value="easy">Easy</option>
                 <option value="medium">Medium</option>

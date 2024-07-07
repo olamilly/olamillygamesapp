@@ -21,14 +21,15 @@
         </div>
         
         <div class="form-box">
-            <label>Choose preferred difficulty level:</label>
+            <label>Choose difficulty level:</label>
             <select v-model="form.difficulty" class="difficulties">
                 <option selected value="easy">Easy</option>
                 <option value="medium">Medium</option>
                 <option value="hard">Hard</option>
             </select>
         </div>
-        <button @click="submit" :disabled="form.difficulty=='' && form.category=='' ">Start</button>
+        <p v-if="form.difficulty!='' && form.category!=''" style="margin-bottom: 0px;"> 5 Questions</p>
+        <button @click="submit" :disabled="form.difficulty=='' || form.category=='' ">Start</button>
       </div>
     </div>
   </template>

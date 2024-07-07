@@ -51,7 +51,7 @@
       }
     },
     methods:{
-      initializeGame(){
+      async initializeGame(){
         this.closeNav()
         this.arr = []
         this.wordGrid=""
@@ -96,8 +96,10 @@
           })
           //console.log(this.wordGrid, this.boxWords)
           this.cells=Array.from(document.querySelectorAll('.cell'))
+          document.querySelector(".main").style.display="flex"
+          document.querySelector("#wordBox").style.display="block"
         })
-        document.querySelector("#wordBox").style.display="block"
+        
       },
       closeNav(){
         document.getElementById("CNav").style.height="0%";
@@ -232,7 +234,7 @@
     
     mounted(){
       this.initializeGame()
-      document.querySelector(".main").style.display="flex"
+      //document.querySelector(".main").style.display="flex"
       
     }
   }

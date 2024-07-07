@@ -126,7 +126,7 @@
     justify-self: center;
     margin:0.3rem;
 }
-.btn:hover, #next:hover{
+.btn:hover{
   background-color: rgb(160, 158, 158);
 }
 #next{
@@ -139,8 +139,6 @@
   padding-right: 1rem;
   border-radius: .3rem;
   outline: none;
-  background-color: lightgrey;
-  border: none;
   margin-top: .5rem;
 }
 p{
@@ -152,6 +150,9 @@ p{
   }
   h3, .btn{
     font-size: 1rem;
+  }
+  .containery {
+    padding-top: 3.3rem;
   }
 }
   </style>

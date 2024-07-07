@@ -18,8 +18,8 @@
   
           </div>
           <div class="modal-footer">
-            <button type="button" id=clz class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" @click="backHome" class="btn btn-primary">Play Again</button>
+            <button type="button" id=clz class="btn btn-secondary" style="color: white;" data-bs-dismiss="modal">Close</button>
+            <button type="button" @click="backHome" class="btn btn-primary" style="color: white;">Play Again</button>
           </div>
         </div>
       </div>
