@@ -4,7 +4,9 @@
  * Memory Match
  * Anagrams
  * Wordle
- * Multiplayer TicTacToe
+ * TicTacToe
+   - Single Player vs Computer: Implemented the MiniMax Algorithm.
+   - Multiplayer pass and play.
  * Trivia
  * Word Search
  * Sudoku

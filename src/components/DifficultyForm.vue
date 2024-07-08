@@ -63,6 +63,7 @@
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
     appearance: none !important;
+    box-shadow: 2px 2px dimgray;
   }
   .form-boxy{
     width: 100%;
@@ -75,16 +76,19 @@
     padding-right: 1.5rem;
     border-radius: .5rem;
     outline: none;
+    color:rgb(0, 163, 0);
     background-color: lightgrey;
     border: none;
     margin: 1rem;
+    font-weight: 600;
+    cursor: pointer;
     box-shadow: 2px 2px dimgray;
   }
   button:disabled{
     color: rgb(168, 168, 168);
     cursor:not-allowed
   }
-  option, button, select{
+  option, select{
     color: black;
     font-weight: 600;
     cursor: pointer;

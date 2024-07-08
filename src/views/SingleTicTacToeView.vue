@@ -226,7 +226,7 @@ function restartBnt(button) {
 	if (button.value == "Restart") {
 		var htmlBoard;
 		var msg;
-
+		whoStarts=1;
 		for (var x = 0; x < 3; x++) {
 			for (var y = 0; y < 3; y++) {
 				board[x][y] = 0;
@@ -249,7 +249,7 @@ function restartBnt(button) {
 
 <template>
   <div class="ticapp">
-    <RouterLink to="/" style="align-self: flex-start;padding:0px;padding-left:.5rem;padding-top:.5rem;"><i class='bx bx-arrow-back'  style="color:black;margin-top: .5rem;align-self: flex-start; font-size: 2rem;cursor:pointer" ></i></RouterLink>
+    <RouterLink to="/tictactoe" style="align-self: flex-start;padding:0px;padding-left:.5rem;padding-top:.5rem;margin-left: -30px;margin-top: -30px;"><i class='bx bx-arrow-back'  style="color:black;margin-top: .5rem;align-self: flex-start; font-size: 2rem;cursor:pointer" ></i></RouterLink>
     <div class="tictacmain">
         
         <div class="containery">
@@ -306,7 +306,7 @@ function restartBnt(button) {
                         </button>
                     </div>
                     <div class="modal-footer">
-                        <RouterLink to="/"><button type="button" style="color: white;" id=clz class="btn btn-secondary" data-bs-dismiss="modal" >Home</button></RouterLink>
+                        <RouterLink to="/tictactoe"><button type="button" style="color: white;" id=clz class="btn btn-secondary" data-bs-dismiss="modal" >Exit</button></RouterLink>
                     </div>
                 </div>
             </div>
@@ -332,7 +332,7 @@ function restartBnt(button) {
         align-items: center;
         justify-content: center;
         width:100%;
-        margin-left: -2rem;
+       
       }
       *{
         color:black;

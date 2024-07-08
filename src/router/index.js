@@ -28,7 +28,23 @@ const router = createRouter({
     {
       path: '/tictactoe',
       name: 'tictactoe',
-      component: () => import('../views/TictactoeView.vue'),
+      component: () => import('../views/TicTacToeHomeView.vue'),
+      meta: {
+        overflow: "hidden",
+      },
+    },
+    {
+      path: '/tictactoe/singleplayer',
+      name: 'singleplayer',
+      component: () => import('../views/SingleTicTacToeView.vue'),
+      meta: {
+        overflow: "hidden",
+      },
+    },
+    {
+      path: '/tictactoe/multiplayer',
+      name: 'multiplayer',
+      component: () => import('../views/MultiTicTacToeView.vue'),
       meta: {
         overflow: "hidden",
       },
@@ -54,12 +70,13 @@ const router = createRouter({
       name: 'wordsearch',
       component: () => import('../views/WordSearchView.vue'),
       meta: {
+        padding: '5px',
         overflow: "hidden",
         backgroundColor:"#2c2b2b",
       },
     },
     {
-      path: '/classic',
+      path: '/memory/classic',
       name: 'classic',
       component: () => import('../views/ClassicView.vue'),
       meta: {
@@ -68,7 +85,7 @@ const router = createRouter({
       },
     },
     {
-      path: '/timed',
+      path: '/memory/timed',
       name: 'timed',
       component: () => import('../views/TimedView.vue'),
       meta: {

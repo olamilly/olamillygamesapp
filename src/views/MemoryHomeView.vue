@@ -19,7 +19,7 @@ function home(){
         </h1>
       </div>
       <div class="homebody">
-        <RouterLink to="classic"><button id="classic" class="medium" >CLASSIC</button></RouterLink>
+        <RouterLink to="/memory/classic"><button id="classic" class="medium" >CLASSIC</button></RouterLink>
         <RouterLink to="timed"><button id="time" class="large">TIME ATTACK</button></RouterLink>
       </div>
     </main>

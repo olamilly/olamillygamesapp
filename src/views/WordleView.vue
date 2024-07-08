@@ -3,8 +3,11 @@
         
         
     <div style="height: 100%; width:100%;display: flex;flex-direction: column;justify-content: flex-start;align-items: center;">
-        <RouterLink to="/" style="align-self: flex-start;padding:0px;padding-left:.5rem;padding-top:.5rem;"><i class='bx bx-arrow-back'  style="color:black;margin-top: .5rem;align-self: flex-start; font-size: 2rem;cursor:pointer" ></i></RouterLink>
-        <h1>W<span style="color: #DABC45;">o</span>rdl<span style="color: #7BB677;">e</span></h1>
+        
+        <div style="display: flex;justify-content: center;width:100%">
+          <RouterLink to="/" style="align-self: flex-start;position:fixed;padding:0px;padding-left:.5rem;padding-top:.5rem;top: 0;left: 0;"><i class='bx bx-arrow-back'  style="color:black;margin-top: .5rem;align-self: flex-start; font-size: 2rem;cursor:pointer" ></i></RouterLink>
+          <h1>W<span style="color: #DABC45;">o</span>rdl<span style="color: #7BB677;">e</span></h1>
+        </div>
         <div class="table">
         <div class="row" id="0">
           <p class="column" id="00"></p>
@@ -55,7 +58,7 @@
         </div>
         <div class="keyRow"><p class="key" id="A">A</p><p class="key" id="S">S</p><p class="key" id="D">D</p><p class="key" id="F">F</p><p class="key" id="G">G</p><p class="key" id="H">H</p><p class="key" id="J">J</p><p class="key" id="K">K</p><p class="key" id="L">L</p>
         </div>
-        <div class="keyRow"><p class="key" id="Enter">Enter</p><p class="key" id="Z">Z</p><p class="key" id="X">X</p><p class="key" id="C">C</p><p class="key" id="V">V</p><p class="key" id="B">B</p><p class="key" id="N">N</p><p class="key" id="M">M</p><p class="key" id="Delete"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="20px" width="20px" version="1.1" id="Layer_1" viewBox="0 0 512 512" xml:space="preserve">
+        <div class="keyRow"><p class="key" id="Enter">Enter</p><p class="key" id="Z">Z</p><p class="key" id="X">X</p><p class="key" id="C">C</p><p class="key" id="V">V</p><p class="key" id="B">B</p><p class="key" id="N">N</p><p class="key" id="M">M</p><p class="key" id="Backspace"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="20px" width="20px" version="1.1" id="Layer_1" viewBox="0 0 512 512" xml:space="preserve">
 <g>
   <g>
     <g>
@@ -87,7 +90,8 @@
             <p id="tdw">THE WORDLE WAS <span></span>.</p>
           </div>
           <div class="modal-footer">
-            <button type="button" style="color: white;" id=clz class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button id=clz data-bs-dismiss="modal" style="display: none;">close</button>
+            <RouterLink to="/"><button type="button" style="color: white;"  class="btn btn-secondary" data-bs-dismiss="modal" >Home</button></RouterLink>
             <button type="button" id=restart @click="initializeGame()" class="btn" style="color:white; background-color: #7BB677;">Play Again</button>
           </div>
         </div>
@@ -100,6 +104,12 @@
         color:black;
         
         box-sizing: border-box;
+      }
+      @media only screen and (max-width: 600px){
+        .wordlebody{
+        margin-top: 3%;
+
+        }
       }
       .wordlebody{
         display: flex;
@@ -160,9 +170,10 @@ var currentString=""
 var todaysWordle
 var g=0
 const keyList = document.querySelectorAll(".key");
+const dictionary = [];
 
-
-async function getRandomWord() {
+async function getRandomWord() {  
+await loadDictionary();  
 const response = await fetch(`https://api.datamuse.com/words?sp=?????`);
 const data = await response.json();
   if (data.length > 0) {
@@ -177,12 +188,22 @@ const data = await response.json();
 }
 
 
-const API_URL2 = "https://api.dictionaryapi.dev/api/v2/entries/en/"
+//const API_URL2 = "https://api.dictionaryapi.dev/api/v2/entries/en/"
 async function isValidWord(word) {
-  const response = await fetch(`${API_URL2}${word}`);
-  const data = await response.json();
-  //return Array.isArray(data) && data.length!=20;
-  return Array.isArray(data);
+  // const response = await fetch(`${API_URL2}${word}`);
+  // const data = await response.json();
+  // //return Array.isArray(data) && data.length!=20;
+  // return Array.isArray(data);
+  return dictionary.includes(word.toLowerCase())
+}
+async function loadDictionary() {
+    const response = await fetch('words.txt'); // Fetch the text file
+    const text = await response.text(); // Read the file content as text
+    const lines = text.split('\n'); // Split the text into lines (words)
+
+    for (const line of lines) {
+    dictionary.push(line.trim()); // Add each word (trimmed) to the dictionary
+    }
 }
 function enterOperation(a){
   if(a){
@@ -251,7 +272,7 @@ function enterOperation(a){
 function type(a){
     
     if(currentRow<=5){
-        if (a!="Enter" && a!="Delete"){
+        if (a.toUpperCase()!="ENTER" && a.toUpperCase()!="BACKSPACE"){
       if (currentColumn<=4){
         var c=String(currentRow)+String(currentColumn);
         document.getElementById(c).innerHTML=a;
@@ -259,23 +280,25 @@ function type(a){
         currentColumn=currentColumn+1;
       }
     }
-    if(a=="Enter"){
+    if(a.toUpperCase()=="ENTER"){
         
       if (currentColumn==5){
-        document.getElementById(a).style.pointerEvents="none";
+        //document.getElementById(a).style.pointerEvents="none";
         isValidWord(currentString)
           .then((isValid) => { 
               enterOperation(isValid);
-              document.getElementById(a).style.pointerEvents="auto"; 
+              //document.getElementById(a).style.pointerEvents="auto"; 
           })
-          .catch((error) => alert("Network Error"));
+          .catch((error) =>{
+            console.log(error)
+            alert("Network Error")
+          } );
       }   
     }
-    if (a=="Delete"){
+    if (a.toUpperCase()=="BACKSPACE"){
       if (currentColumn>0){
         currentColumn=currentColumn-1;
         var c=String(currentRow)+String(currentColumn);
-        var v=document.getElementById(c).innerHTML;
         currentString=currentString.slice(0,currentColumn);
         document.getElementById(c).innerHTML="";
       }  
@@ -317,7 +340,8 @@ onMounted(() => {
   const keyList = document.querySelectorAll(".key");
   for(var i=0; i<28; i++) {
         keyList[i].addEventListener("click", function b(){type(this.id)});
-    }
+  }
+  document.addEventListener("keydown",function b(e){type(String(e.key).toUpperCase())})
 })
 
 onBeforeUnmount(()=>{

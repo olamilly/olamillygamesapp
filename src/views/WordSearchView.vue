@@ -12,6 +12,9 @@
     name: 'WordSearch',
     components: {
         searchBox
+    },
+    mounted(){
+      window.scrollTo(0,0)
     }
   }
   </script>

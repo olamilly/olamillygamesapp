@@ -55,6 +55,9 @@
         document.querySelector("#loader").style.display="flex";
         this.$emit('submit', this.form)
         }
+    },
+    mounted(){
+      window.scrollTo(0,0)
     }
   }
   </script>

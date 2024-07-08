@@ -20,6 +20,9 @@ if(to.meta.padding){
 }
 else{
     document.querySelector("#app").style.padding="2rem";
+    if (to.name=="wordsearch"){
+        document.querySelector("#app").style.padding=".7rem";
+    }
 }
 if(to.meta.overflow){
     document.body.style.overflow= "hidden"

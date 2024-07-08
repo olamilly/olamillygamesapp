@@ -61,7 +61,7 @@
                     <div class="modal-footer">
                         <RouterLink to="/"><button type="button" style="color: white;" id=clz class="btn btn-secondary" data-bs-dismiss="modal" >Home</button></RouterLink>
                         <button type="button" v-if="modalState==2"  class="btn btn-primary" style="color:white;" @click="()=>{modalState=3}" >All words</button>
-                        <button type="button" v-if="modalState==2 || modalState==3" id=restart  class="btn btn-primary" style="color:white;" data-bs-dismiss="modal" @click="reinitGame" >Restart</button>
+                        <button type="button" v-if="modalState==2 || modalState==3" id=restart  class="btn btn-primary" style="color:white;"  @click="reinitGame" >Restart</button>
                         <button type="button" v-if="modalState==1" id=start  class="btn btn-primary" data-bs-dismiss="modal" style="color:white;" @click="startTimer" >Start</button>
                     </div>
                 </div>
@@ -79,7 +79,8 @@ export default {
     return {
         number_of_words:0,
         score:0,
-        myWord:"",
+        tempWord:"",
+        myWord:"******",
         allWords:[],
         currentWord:"",
         userWords:[],
@@ -116,7 +117,7 @@ export default {
                 [letters[i], letters[j]] = [letters[j], letters[i]];
             }
             // Join the scrambled letters back into a string
-            this.myWord=letters.join("");
+            this.tempWord=letters.join("");
             
             this.getAllWords()
         })
@@ -129,7 +130,7 @@ export default {
         document.getElementById("timer").style.color="red"
         this.number_of_words=0
         this.score=0
-        this.myWord=""
+        this.myWord="******"
         this.allWords=[]
         this.currentWord=""
         this.userWords=[]
@@ -144,14 +145,13 @@ export default {
             i.innerText=""
         })
         this.mainInit()
-        this.startTimer()
     },
     startTimer(){
         function formatNumber(number, digits) {
         const zeroPadding = Array(Math.max(0, digits - String(number).length)).fill('0').join('');
         return zeroPadding + number;
         }
-
+        this.myWord=this.tempWord;
         document.getElementById("timer").style.color="red"
         window.m = setInterval( ()=>{
             this.timeLeft = formatNumber(this.timeLeft - 1, 2)
@@ -190,7 +190,7 @@ export default {
             }
         }
         await loadDictionary();
-        const partialAnagrams = findPartialAnagrams(this.myWord, dictionary);
+        const partialAnagrams = findPartialAnagrams(this.tempWord, dictionary);
         partialAnagrams.forEach(i=>{
             if(i.length>=3){
                 this.allWords.push(i)
@@ -269,9 +269,8 @@ export default {
 <style scoped>
 .abody{
 text-align: center;
-margin-top: 0px;
-width:100%;
-height: 100%;
+margin-top: 5%;
+height: 95%;
 width:100%;
 overflow-x: hidden;
 overflow-y: hidden;
@@ -303,6 +302,10 @@ margin-top: 1rem;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+}
+#enter:disabled{
+    color: lightgray;
+    cursor: not-allowed;
 }
 #enter{
     width:30%;

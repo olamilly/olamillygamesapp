@@ -242,7 +242,7 @@
 		</svg>
 		<div class="description">
 			<h4>Anagrams</h4>
-			<p>Make words from the given letters before the timer runs out.</p>
+			<p>Make words before the timer runs out.</p>
 		</div>
 		</div>
 		
@@ -273,7 +273,7 @@
 		</svg>
 		<div class="description">
 			<h4>Tic Tac Toe</h4>
-			<p>Multiplayer X and O.</p>
+			<p>Classic game of X and O.</p>
 		</div>
       </div>
     </RouterLink>
@@ -295,6 +295,7 @@
       .links{
         flex-direction: column;
         align-items: center;
+		justify-content: center ;
       }
     }
 .iconBox{
@@ -308,10 +309,7 @@
   transform: scale(1.1);
   box-shadow: 0 0 20px 2px gray;
 }
-.homeLink{
-  display:flex;
-  justify-content: center;
-}
+
 button {
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
